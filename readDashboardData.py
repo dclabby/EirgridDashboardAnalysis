@@ -53,6 +53,8 @@ def calcStats(timeSeries, dataSeries):
 
 def movAvg(dataSeries, N):
     movAvg = np.convolve(dataSeries, np.ones(N)/N, mode='same')#, mode='valid')
+    movAvg[:int(N/2)] = float("NaN")
+    movAvg[-int(N/2):] = float("NaN")
     return movAvg
 
 windTmp = importData("WindGeneration")
@@ -124,18 +126,11 @@ lines, labels = plt.thetagrids( range(0,360,30), ('Jan', 'Feb', 'Mar','Apr', 'Ma
 plt.legend([y.year for y in yearVector], loc='upper left', bbox_to_anchor=(1.05, 1))
 plt.title("Monthly average Wind Generation \n as a percentage of total System Generation")
 
-
-halfN = int(N/2)
 dayNum = np.array([datetime.date(d.year, d.month, d.day).toordinal() - datetime.date(d.year, 1, 1).toordinal() for d in dfMerged["dateTime"]])
 plt.figure(4)
 for iYear, c in zip(range(2014, 2021),color):
     b = [d.year==iYear for d in dfMerged["dateTime"]]
-    if iYear == 2014:
-        plt.polar((dayNum[b][halfN:]/365)*np.pi*2, movAvgWindPerSys[b][halfN:], c=c)
-    elif iYear == 2020:
-        plt.polar((dayNum[b][:-halfN]/365)*np.pi*2, movAvgWindPerSys[b][:-halfN], c=c)
-    else:
-        plt.polar((dayNum[b]/365)*np.pi*2, movAvgWindPerSys[b], c=c)
+    plt.polar((dayNum[b]/365)*np.pi*2, movAvgWindPerSys[b], c=c)
 
 lines, labels = plt.thetagrids( range(0,360,30), ('Jan', 'Feb', 'Mar','Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec') )
 plt.legend([y.year for y in yearVector], loc='upper left', bbox_to_anchor=(1.05, 1))
