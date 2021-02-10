@@ -46,7 +46,6 @@ def calcStats(timeSeries, dataSeries):
         
         avgAnnual.append(dfTmp["dataSeries"].mean())
         for iMonth in range(1,13):
-            #monthVector.append(datetime.date(iYear, iMonth, 15))            
             avgMonthly.append(dfTmp["dataSeries"][pd.DatetimeIndex(dfTmp["timeSeries"]).month == iMonth].mean())
     
     return avgAnnual, avgMonthly
@@ -70,7 +69,11 @@ dfMerged = pd.DataFrame({
 
 avgAnnualWind, avgMonthlyWind = calcStats(dfMerged["dateTime"], dfMerged["wind"])
 avgAnnualSys, avgMonthlySys = calcStats(dfMerged["dateTime"], dfMerged["sys"])
+
+# mean of ratios:
 annualWindPerSys, monthlyWindPerSys = calcStats(dfMerged["dateTime"], dfMerged["windPerSys"])
+
+# ratio of means:
 # monthlyWindPerSys = [i/j for i, j in zip(avgMonthlyWind, avgMonthlySys)]
 # annualWindPerSys = [i/j for i, j in zip(avgAnnualWind, avgAnnualSys)]
 
