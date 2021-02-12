@@ -14,8 +14,8 @@ This repo contains scripts to:
 
 <p> The following plots show examples of the analysis that can be implemented: <p>
 <br>
-<p>Calculation of the annual average contribution of wind generation to overall system generation from 2014 to 2020:</p>
-<img src="Figure2_AnnualAvgWindPerSystem.png">
+<p>Calculation of the annual average contribution of generated wind energy to overall generated energy from 2014 to 2020:</p>
+<img src="Figure3_AnnualAvgWindEnergyPerSystem.png">
 <br>
 <p>Calculation of the monthly average contribution of wind generation to overall system generation from 2014 to 2020, with smoothing applied using a three month moving average:</p>
 <img src="Figure4_3MnthAvgWindPerSystem.png">
