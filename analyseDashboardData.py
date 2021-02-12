@@ -70,12 +70,12 @@ dfMerged = pd.DataFrame({
 avgAnnualWind, avgMonthlyWind = calcStats(dfMerged["dateTime"], dfMerged["wind"])
 avgAnnualSys, avgMonthlySys = calcStats(dfMerged["dateTime"], dfMerged["sys"])
 
-# mean of ratios:
+# Average wind power per generated system power:
 annualWindPerSys, monthlyWindPerSys = calcStats(dfMerged["dateTime"], dfMerged["windPerSys"])
 
-# ratio of means:
-# monthlyWindPerSys = [i/j for i, j in zip(avgMonthlyWind, avgMonthlySys)]
-# annualWindPerSys = [i/j for i, j in zip(avgAnnualWind, avgAnnualSys)]
+# Average wind energy per generated system energy:
+monthlyEnergy = [100*i/j for i, j in zip(avgMonthlyWind, avgMonthlySys)] # equivalent to sum(avgMonthlyWind*dt)/sum(avgMonthlySys*dt) since (1/N) terms in means cancel
+annualEnergy = [100*i/j for i, j in zip(avgAnnualWind, avgAnnualSys)] # equivalent to sum(avgAnnualWind*dt)/sum(avgAnnualSys*dt) since (1/N) terms in means cancel
 
 N = 4*24*30*3
 movAvgWind = movAvg(dfMerged["wind"], N)
@@ -117,9 +117,16 @@ color = plt.cm.winter(np.linspace(0,1,n))# color = plt.cm.cool(np.linspace(0,1,n
 plt.figure(2)
 for i,c in zip(range(n),color):
     plt.bar([y.year for y in yearVector][i], annualWindPerSys[i], color=c)
-plt.title("Annual average Wind Generation \n as a percentage of total System Generation")
+plt.title("Average Generated Wind Power \n as a percentage of total Generated Power")
+plt.ylim((0, 40))
 
 plt.figure(3)
+for i,c in zip(range(n),color):
+    plt.bar([y.year for y in yearVector][i], annualEnergy[i], color=c)
+plt.title("Annual average Generated Wind Energy \n as a percentage of total Generated Energy")
+plt.ylim((0, 40))
+
+plt.figure(4)
 for i,c in zip(range(n),color):
     if i == n-1:
         plt.polar(monthVecRadial[:-1], monthlyWindPerSys[i*12:(i+1)*12], c=c)
@@ -130,7 +137,7 @@ plt.legend([y.year for y in yearVector], loc='upper left', bbox_to_anchor=(1.05,
 plt.title("Monthly average Wind Generation \n as a percentage of total System Generation")
 
 dayNum = np.array([datetime.date(d.year, d.month, d.day).toordinal() - datetime.date(d.year, 1, 1).toordinal() for d in dfMerged["dateTime"]])
-plt.figure(4)
+plt.figure(5)
 for iYear, c in zip(range(2014, 2021),color):
     b = [d.year==iYear for d in dfMerged["dateTime"]]
     plt.polar((dayNum[b]/365)*np.pi*2, movAvgWindPerSys[b], c=c)
